@@ -46,6 +46,7 @@ class aholin_crmcustomtab extends CModule
     {
         if ($this->isVersionD7()) {
             ModuleManager::registerModule($this->MODULE_ID);
+            $this->InstallFiles();
             $this->InstallDB();
             $this->InstallEvents();
 
@@ -61,6 +62,7 @@ class aholin_crmcustomtab extends CModule
      */
     public function DoUninstall(): void
     {
+        $this->UnInstallFiles();
         $this->UnInstallDB();
         $this->UnInstallEvents();
 
@@ -79,8 +81,6 @@ class aholin_crmcustomtab extends CModule
         } else {
             throw new InvalidPathException($component_path);
         }
-
-        CopyDirFiles($this->getPath() . '/install/public', $_SERVER['DOCUMENT_ROOT'] . '/', true, true);
     }
 
     public function InstallDB(): void
@@ -218,7 +218,7 @@ class aholin_crmcustomtab extends CModule
         ];
     }
 
-    public function getPath($notDocumentRoot = false): bool
+    public function getPath($notDocumentRoot = false): string
     {
         if ($notDocumentRoot) {
             return str_ireplace(Application::getDocumentRoot(), '', dirname(__DIR__));
